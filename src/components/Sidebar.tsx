@@ -14,6 +14,7 @@ import {
   WorkOutline,
   Report,
 } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -49,10 +50,12 @@ const Sidebar = () => {
         <Menu>
           <Title className='text-xl text-gray-500'>Dashboard</Title>
           <List className='p-1.5 text-lg'>
-            <ListItem>
-              <LineStyle style={{ fontSize: 30 }} className='mr-2' />
-              Home
-            </ListItem>
+            <Link to='/'>
+              <ListItem>
+                <LineStyle style={{ fontSize: 30 }} className='mr-2' />
+                Home
+              </ListItem>
+            </Link>
             <ListItem>
               <Timeline style={{ fontSize: 30 }} className='mr-2' />
               Analytics
@@ -64,14 +67,18 @@ const Sidebar = () => {
           </List>
           <Title className='text-xl text-gray-500'>Quick Menu</Title>
           <List className='p-1.5 text-lg'>
-            <ListItem>
-              <PermIdentity style={{ fontSize: 30 }} className='mr-2' />
-              Users
-            </ListItem>
-            <ListItem>
-              <Storefront style={{ fontSize: 30 }} className='mr-2' />
-              Products
-            </ListItem>
+            <Link to={'/users'}>
+              <ListItem>
+                <PermIdentity style={{ fontSize: 30 }} className='mr-2' />
+                Users
+              </ListItem>
+            </Link>
+            <Link to='/products'>
+              <ListItem>
+                <Storefront style={{ fontSize: 30 }} className='mr-2' />
+                Products
+              </ListItem>
+            </Link>
             <ListItem>
               <AttachMoney style={{ fontSize: 30 }} className='mr-2' />
               Transactions

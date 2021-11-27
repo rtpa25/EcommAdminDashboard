@@ -5,26 +5,23 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { userRows } from '../dummyData';
+import { productRows } from '../dummyData';
 
 const Container = styled.div`
   flex: 4;
 `;
-
-const User = styled.div`
+const ProductListItem = styled.div`
   display: flex;
   align-items: center;
 `;
-
-const Image = styled.img`
+const ProductListImg = styled.img`
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 0.625rem;
 `;
-
-const EditButton = styled.button`
+const ProductListEditButton = styled.button`
   padding: 0.75rem;
   background-color: #3bb077;
   color: white;
@@ -37,7 +34,7 @@ const EditButton = styled.button`
   }
 `;
 
-const DeleteButton = styled(DeleteOutline)`
+const ProductListDeleteButton = styled(DeleteOutline)`
   color: #7e0000;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -48,7 +45,7 @@ const DeleteButton = styled(DeleteOutline)`
 `;
 
 const UserList = () => {
-  const [data, setData] = useState(userRows);
+  const [data, setData] = useState(productRows);
 
   const handleDelete = (id: number) => {
     setData(data.filter((item) => item.id !== id));
@@ -56,55 +53,51 @@ const UserList = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90, type: 'number' },
-    { field: 'username', headerName: 'Username', width: 130, type: 'string' },
+    { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: 'user',
-      headerName: 'User',
+      field: 'product',
+      headerName: 'Product',
       width: 200,
       renderCell: (params) => {
         return (
-          <User>
-            <Image className='userListImg' src={params.row.avatar} alt='' />
-            {params.row.username}
-          </User>
+          <ProductListItem className='productListItem'>
+            <ProductListImg
+              className='productListImg'
+              src={params.row.img}
+              alt=''
+            />
+            {params.row.name}
+          </ProductListItem>
         );
       },
     },
-    {
-      field: 'email',
-      headerName: 'Email',
-      type: 'string',
-      width: 200,
-    },
+    { field: 'stock', headerName: 'Stock', width: 200 },
     {
       field: 'status',
       headerName: 'Status',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
       width: 120,
     },
     {
-      field: 'transaction',
-      headerName: 'Transaction',
+      field: 'price',
+      headerName: 'Price',
       width: 160,
     },
     {
       field: 'action',
       headerName: 'Action',
-      width: 180,
+      width: 150,
       renderCell: (params) => {
         return (
           <>
-            <Link to={'/user/' + params.row.id}>
-              <EditButton className='userListEdit'>Edit</EditButton>
+            <Link to={'/product/' + params.row.id}>
+              <ProductListEditButton className='productListEdit'>
+                Edit
+              </ProductListEditButton>
             </Link>
-            <div
-              onClick={() => {
-                handleDelete(params.row.id);
-              }}>
-              <DeleteButton />
-            </div>
+            <ProductListDeleteButton
+              className='productListDelete'
+              onClick={() => handleDelete(params.row.id)}
+            />
           </>
         );
       },
