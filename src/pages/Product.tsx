@@ -1,23 +1,18 @@
 /** @format */
 
-import {
-  CalendarToday,
-  LocationSearching,
-  MailOutline,
-  PermIdentity,
-  PhoneAndroid,
-  Publish,
-} from '@material-ui/icons';
 import { Link } from 'react-router-dom';
+import Chart from '../components/Chart';
+import { productData } from '../dummyData';
+import { Publish } from '@material-ui/icons';
 import styled from 'styled-components';
 
 const Container = styled.div`
   flex: 4;
   padding: 1.25rem;
 `;
-const TitleContainer = styled.div``;
-const Title = styled.h1``;
-const Button = styled.button`
+const ProductTitleContainer = styled.div``;
+const ProductTitle = styled.h1``;
+const ProductAddButton = styled.button`
   width: 5rem;
   padding: 0.313rem;
   background-color: teal;
@@ -31,107 +26,100 @@ const Button = styled.button`
     color: #00c3c3;
   }
 `;
-const UserContainer = styled.div`
+const ProductTop = styled.div`
   display: flex;
-  margin-top: 1.25rem;
 `;
-const UserShow = styled.div`
+const ProductTopLeft = styled.div`
+  flex: 1;
+`;
+
+const ProductTopRight = styled.div`
   flex: 1;
   padding: 1.25rem;
+  margin: 1.25rem;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
 `;
-const UserShowTop = styled.div`
+const ProductInfoTop = styled.div`
   display: flex;
   align-items: center;
 `;
-const UserShowImg = styled.img`
+const ProductInfoImage = styled.img`
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
   object-fit: cover;
+  margin-right: 1.25rem;
 `;
-const UserShowTopTitle = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 1.25rem;
-`;
-const UserShowUsername = styled.span`
+const ProductName = styled.span`
   font-weight: 600;
 `;
-const UserShowUserTitle = styled.span`
+const ProductInfoBottom = styled.div`
+  margin-top: 0.625rem;
+`;
+const ProductInfoItem = styled.div`
+  width: 9.375rem;
+  display: flex;
+  justify-content: space-between;
+`;
+const ProductInfoKey = styled.span`
+  font-size: 1.2rem;
+`;
+const ProductInfoValue = styled.span`
+  font-size: 1.2rem;
   font-weight: 300;
 `;
-const UserShowBottom = styled.div`
-  margin-top: 1.25rem;
-`;
-const UserShowTitle = styled.span`
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: rgb(175, 170, 170);
-`;
-const UserShowInfo = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 1.25rem 0;
-  color: #444;
-`;
-const UserShowInfoTitle = styled.span`
-  margin-left: 0.625rem;
-`;
-const UserUpdate = styled.div`
-  flex: 2;
-  padding: 1.25rem;
+
+const ProductBottom = styled.div`
+  padding: 20px;
+  margin: 20px;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  margin-left: 1.25rem;
 `;
-const UserUpdateTitle = styled.span`
-  font-size: 1.5rem;
-  font-weight: 600;
-`;
-const UserUpdateForm = styled.form`
+const ProductForm = styled.form`
   display: flex;
   justify-content: space-between;
-  margin-top: 1.25rem;
 `;
-const UserUpdateLeft = styled.div``;
-const UserUpdateItem = styled.div`
+const ProductFormLeft = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 0.625rem;
+
   label {
-    margin-bottom: 5px;
-    font-size: 0.875rem;
+    font-size: 1.25rem;
+    margin-bottom: 0.625rem;
+    color: gray;
+  }
+  input {
+    height: 2.5rem;
+    margin-bottom: 0.625rem;
+    border: none;
+    padding: 5px;
+    border-bottom: 1px solid gray;
+  }
+  select {
+    margin-bottom: 0.625rem;
+    height: 2.5rem;
   }
 `;
-const UserUpdateInput = styled.input`
-  border: none;
-  width: 15.625rem;
-  height: 1.875rem;
-  border-bottom: 1px solid gray;
-`;
-const UserUpdateRight = styled.div`
+const ProductFormRight = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
 `;
-const UserUpdateUpload = styled.div`
+const ProductUpload = styled.div`
   display: flex;
   align-items: center;
 `;
-const UserUpdateImg = styled.img`
+const ProductUploadImg = styled.img`
   width: 6.25rem;
   height: 6.25rem;
   border-radius: 0.625rem;
   object-fit: cover;
   margin-right: 1.25rem;
 `;
-const UserUpdateButton = styled.button`
+const ProductButton = styled.button`
   border-radius: 5px;
-  border: none;
   padding: 5px;
-  cursor: pointer;
   background-color: teal;
   color: white;
   font-weight: 600;
@@ -141,92 +129,82 @@ const UserUpdateButton = styled.button`
     color: #00c3c3;
   }
 `;
-const User = () => {
+const Product = () => {
   return (
     <Container>
-      <TitleContainer className='flex items-center justify-between'>
-        <Title className='text-3xl font-semibold'>Edit User</Title>
-        <Link to='/newUser'>
-          <Button>Create</Button>
+      <ProductTitleContainer className='flex items-center justify-between'>
+        <ProductTitle className='text-3xl font-semibold'>Product</ProductTitle>
+        <Link to='/newProduct'>
+          <ProductAddButton>Create</ProductAddButton>
         </Link>
-      </TitleContainer>
-      <UserContainer>
-        <UserShow>
-          <UserShowTop>
-            <UserShowImg src='https://images.pexels.com/photos/1152994/pexels-photo-1152994.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500' />
-            <UserShowTopTitle>
-              <UserShowUsername>Anna Becker</UserShowUsername>
-              <UserShowUserTitle>Software Engineer</UserShowUserTitle>
-            </UserShowTopTitle>
-          </UserShowTop>
-          <UserShowBottom>
-            <UserShowTitle>Account Details</UserShowTitle>
-            <UserShowInfo>
-              <PermIdentity className='text-base' />
-              <UserShowInfoTitle>annabeck99</UserShowInfoTitle>
-            </UserShowInfo>
-            <UserShowInfo>
-              <CalendarToday className='text-base' />
-              <UserShowInfoTitle>10.12.1999</UserShowInfoTitle>
-            </UserShowInfo>
-            <UserShowTitle>Contact Details</UserShowTitle>
-            <UserShowInfo>
-              <PhoneAndroid className='text-base' />
-              <UserShowInfoTitle>+91-9861736576</UserShowInfoTitle>
-            </UserShowInfo>
-            <UserShowInfo>
-              <MailOutline className='text-base' />
-              <UserShowInfoTitle>pandaronit25@gmail.com</UserShowInfoTitle>
-            </UserShowInfo>
-            <UserShowInfo>
-              <LocationSearching className='text-base' />
-              <UserShowInfoTitle>BBSR | India</UserShowInfoTitle>
-            </UserShowInfo>
-          </UserShowBottom>
-        </UserShow>
-        <UserUpdate>
-          <UserUpdateTitle>Edit</UserUpdateTitle>
-          <UserUpdateForm>
-            <UserUpdateLeft>
-              <UserUpdateItem>
-                <label htmlFor=''>Username</label>
-                <UserUpdateInput type='text' placeholder='annabeck99' />
-              </UserUpdateItem>
-              <UserUpdateItem>
-                <label htmlFor=''>Full Name</label>
-                <UserUpdateInput type='text' placeholder='Anna Becker' />
-              </UserUpdateItem>
-              <UserUpdateItem>
-                <label htmlFor=''>Email</label>
-                <UserUpdateInput
-                  type='text'
-                  placeholder='pandaronit25@gmail.com'
-                />
-              </UserUpdateItem>
-              <UserUpdateItem>
-                <label htmlFor=''>Phone</label>
-                <UserUpdateInput type='text' placeholder='+91-9861736576' />
-              </UserUpdateItem>
-              <UserUpdateItem>
-                <label htmlFor=''>Address</label>
-                <UserUpdateInput type='text' placeholder='BBSR | India' />
-              </UserUpdateItem>
-            </UserUpdateLeft>
-            <UserUpdateRight>
-              <UserUpdateUpload>
-                <UserUpdateImg src='https://images.pexels.com/photos/1152994/pexels-photo-1152994.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500' />
-                <label>
-                  <Publish className='cursor-pointer' />
-                </label>
-                <input type='file' id='file' style={{ display: 'none' }} />
-              </UserUpdateUpload>
-              <UserUpdateButton>Update</UserUpdateButton>
-            </UserUpdateRight>
-          </UserUpdateForm>
-        </UserUpdate>
-      </UserContainer>
+      </ProductTitleContainer>
+      <ProductTop>
+        <ProductTopLeft>
+          <Chart
+            data={productData}
+            dataKey='Sales'
+            title='Sales Performance'
+            grid={undefined}
+          />
+        </ProductTopLeft>
+        <ProductTopRight>
+          <ProductInfoTop>
+            <ProductInfoImage
+              src='https://images.pexels.com/photos/7156886/pexels-photo-7156886.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500'
+              alt=''
+            />
+            <ProductName className='text-xl '>Apple Airpods</ProductName>
+          </ProductInfoTop>
+          <ProductInfoBottom>
+            <ProductInfoItem>
+              <ProductInfoKey>id:</ProductInfoKey>
+              <ProductInfoValue>123</ProductInfoValue>
+            </ProductInfoItem>
+            <ProductInfoItem>
+              <ProductInfoKey>sales:</ProductInfoKey>
+              <ProductInfoValue>5123</ProductInfoValue>
+            </ProductInfoItem>
+            <ProductInfoItem>
+              <ProductInfoKey>active:</ProductInfoKey>
+              <ProductInfoValue>yes</ProductInfoValue>
+            </ProductInfoItem>
+            <ProductInfoItem>
+              <ProductInfoKey>in stock:</ProductInfoKey>
+              <ProductInfoValue>no</ProductInfoValue>
+            </ProductInfoItem>
+          </ProductInfoBottom>
+        </ProductTopRight>
+      </ProductTop>
+      <ProductBottom>
+        <ProductForm>
+          <ProductFormLeft>
+            <label>Product Name</label>
+            <input type='text' placeholder='Apple AirPod' />
+            <label>In Stock</label>
+            <select name='inStock' id='idStock'>
+              <option value='yes'>Yes</option>
+              <option value='no'>No</option>
+            </select>
+            <label>Active</label>
+            <select name='active' id='active'>
+              <option value='yes'>Yes</option>
+              <option value='no'>No</option>
+            </select>
+          </ProductFormLeft>
+          <ProductFormRight>
+            <ProductUpload>
+              <ProductUploadImg src='https://images.pexels.com/photos/7156886/pexels-photo-7156886.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500' />
+              <label htmlFor='file'>
+                <Publish />
+              </label>
+              <input type='file' id='file' style={{ display: 'none' }} />
+            </ProductUpload>
+            <ProductButton>Update</ProductButton>
+          </ProductFormRight>
+        </ProductForm>
+      </ProductBottom>
     </Container>
   );
 };
 
-export default User;
+export default Product;

@@ -66,15 +66,15 @@ export const productData = [
   },
   {
     name: 'Apr',
-    Sales: 5000,
+    Sales: 1000,
   },
   {
     name: 'May',
-    Sales: 5000,
+    Sales: 6000,
   },
   {
     name: 'June',
-    Sales: 5000,
+    Sales: 8000,
   },
   {
     name: 'Jul',
@@ -82,23 +82,23 @@ export const productData = [
   },
   {
     name: 'Aug',
-    Sales: 5000,
+    Sales: 4000,
   },
   {
     name: 'Sep',
-    Sales: 5000,
+    Sales: 10000,
   },
   {
     name: 'Oct',
-    Sales: 5000,
+    Sales: 7000,
   },
   {
     name: 'Nov',
-    Sales: 5000,
+    Sales: 9000,
   },
   {
     name: 'Dec',
-    Sales: 5000,
+    Sales: 12000,
   },
 ];
 

@@ -51,7 +51,7 @@ const NewUserButton = styled.button`
   border-radius: 5px;
   padding: 1rem;
   width: 10rem;
-  cursor: pointer;
+
   background-color: teal;
   color: white;
   margin-top: 1.25rem;
