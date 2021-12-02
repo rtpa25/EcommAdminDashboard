@@ -79,68 +79,7 @@ const UserShowInfo = styled.div`
 const UserShowInfoTitle = styled.span`
   margin-left: 0.625rem;
 `;
-const UserUpdate = styled.div`
-  flex: 2;
-  padding: 1.25rem;
-  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
-  margin-left: 1.25rem;
-`;
-const UserUpdateTitle = styled.span`
-  font-size: 1.5rem;
-  font-weight: 600;
-`;
-const UserUpdateForm = styled.form`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1.25rem;
-`;
-const UserUpdateLeft = styled.div``;
-const UserUpdateItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 0.625rem;
-  label {
-    margin-bottom: 5px;
-    font-size: 0.875rem;
-  }
-`;
-const UserUpdateInput = styled.input`
-  border: none;
-  width: 15.625rem;
-  height: 1.875rem;
-  border-bottom: 1px solid gray;
-`;
-const UserUpdateRight = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-const UserUpdateUpload = styled.div`
-  display: flex;
-  align-items: center;
-`;
-const UserUpdateImg = styled.img`
-  width: 6.25rem;
-  height: 6.25rem;
-  border-radius: 0.625rem;
-  object-fit: cover;
-  margin-right: 1.25rem;
-`;
-const UserUpdateButton = styled.button`
-  border-radius: 5px;
-  border: none;
-  padding: 5px;
-  cursor: pointer;
-  background-color: teal;
-  color: white;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  &:hover {
-    background-color: black;
-    color: #00c3c3;
-  }
-`;
+
 const User = () => {
   return (
     <Container>
@@ -184,46 +123,6 @@ const User = () => {
             </UserShowInfo>
           </UserShowBottom>
         </UserShow>
-        <UserUpdate>
-          <UserUpdateTitle>Edit</UserUpdateTitle>
-          <UserUpdateForm>
-            <UserUpdateLeft>
-              <UserUpdateItem>
-                <label htmlFor=''>Username</label>
-                <UserUpdateInput type='text' placeholder='annabeck99' />
-              </UserUpdateItem>
-              <UserUpdateItem>
-                <label htmlFor=''>Full Name</label>
-                <UserUpdateInput type='text' placeholder='Anna Becker' />
-              </UserUpdateItem>
-              <UserUpdateItem>
-                <label htmlFor=''>Email</label>
-                <UserUpdateInput
-                  type='text'
-                  placeholder='pandaronit25@gmail.com'
-                />
-              </UserUpdateItem>
-              <UserUpdateItem>
-                <label htmlFor=''>Phone</label>
-                <UserUpdateInput type='text' placeholder='+91-9861736576' />
-              </UserUpdateItem>
-              <UserUpdateItem>
-                <label htmlFor=''>Address</label>
-                <UserUpdateInput type='text' placeholder='BBSR | India' />
-              </UserUpdateItem>
-            </UserUpdateLeft>
-            <UserUpdateRight>
-              <UserUpdateUpload>
-                <UserUpdateImg src='https://images.pexels.com/photos/1152994/pexels-photo-1152994.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500' />
-                <label>
-                  <Publish className='cursor-pointer' />
-                </label>
-                <input type='file' id='file' style={{ display: 'none' }} />
-              </UserUpdateUpload>
-              <UserUpdateButton>Update</UserUpdateButton>
-            </UserUpdateRight>
-          </UserUpdateForm>
-        </UserUpdate>
       </UserContainer>
     </Container>
   );

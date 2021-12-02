@@ -1,5 +1,8 @@
 /** @format */
 
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -11,7 +14,7 @@ const AddProductForm = styled.form`
   margin-top: 10px;
 `;
 const AddProductItem = styled.div`
-  width: 250px;
+  width: 50%;
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
@@ -47,30 +50,101 @@ const AddProductButton = styled.button`
 `;
 
 const NewProduct = () => {
+  const [name, setName] = useState<string>('');
+  const [price, setPrice] = useState<number>();
+  const [desc, setDesc] = useState<string>('');
+  const categoryRef = useRef<any>();
+  const sizeRef = useRef<any>();
+  const colorRef = useRef<any>();
+  const [image, setImage] = useState<any>();
+
+  const createProductHandler = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const categoryString = categoryRef.current.value;
+    const categoryArray = categoryString.trim().split(',');
+    const sizeString = sizeRef.current.value;
+    const sizeArray = sizeString.trim().split(',');
+    const colorString = colorRef.current.value;
+    const colorArray = colorString.trim().split(',');
+    const res = await axios.request({
+      url: 'http://localhost:5000/api/v1/addProduct',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      data: {
+        name: name,
+        desc: desc,
+        price: price,
+        categories: categoryArray,
+        size: sizeArray,
+        color: colorArray,
+        File: image,
+      },
+      withCredentials: true,
+    });
+    const status = res.status;
+    alert(status);
+  };
+
   return (
     <Container>
       <AddProductTitle>New Product</AddProductTitle>
-      <AddProductForm>
+      <AddProductForm className='flex flex-col flex-wrap'>
         <AddProductItem>
           <label>Image</label>
-          <input type='file' id='file' />
+          <input type='file' onChange={(e) => setImage(e.target.files![0])} />
         </AddProductItem>
         <AddProductItem>
           <label>Name</label>
-          <input type='text' placeholder='Apple Airpods' />
+          <input
+            type='text'
+            placeholder='Apple Airpods'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </AddProductItem>
         <AddProductItem>
-          <label>Stock</label>
-          <input type='text' placeholder='123' />
+          <label>Price</label>
+          <input
+            type='number'
+            placeholder='123'
+            value={price}
+            onChange={(e) => setPrice(e.target.valueAsNumber)}
+          />
         </AddProductItem>
         <AddProductItem>
-          <label>Active</label>
-          <select name='active' id='active'>
-            <option value='yes'>Yes</option>
-            <option value='no'>No</option>
-          </select>
+          <label>Desc</label>
+          <input
+            type='text'
+            placeholder='these are fancy airpods'
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+          />
         </AddProductItem>
-        <AddProductButton>Create</AddProductButton>
+        <AddProductItem>
+          <label>Category</label>
+          <input
+            type='text'
+            placeholder='write categories separeted with a coma'
+            ref={categoryRef}
+          />
+          <label>Size</label>
+          <input
+            type='text'
+            placeholder='write sizes separeted with a coma'
+            ref={sizeRef}
+          />
+          <label>Color</label>
+          <input
+            type='text'
+            placeholder='write colors separeted with a coma'
+            ref={colorRef}
+          />
+        </AddProductItem>
+        <AddProductButton onClick={createProductHandler}>
+          Create
+        </AddProductButton>
       </AddProductForm>
     </Container>
   );

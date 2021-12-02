@@ -1,10 +1,12 @@
 /** @format */
 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Chart from '../components/Chart';
 import { productData } from '../dummyData';
 import { Publish } from '@material-ui/icons';
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Container = styled.div`
   flex: 4;
@@ -130,6 +132,63 @@ const ProductButton = styled.button`
   }
 `;
 const Product = () => {
+  const location = useLocation();
+  const id = location.pathname.split('/')[2];
+  const [productInfo, setProductInfo] = useState<any>({
+    id: '',
+    name: '',
+    price: 0,
+    img: { secure_url: '' },
+    desc: '',
+    color: [''],
+    size: [''],
+    quantity: 1,
+  });
+  const [name, setName] = useState<any>('');
+  const [desc, setDesc] = useState<any>('');
+  const [price, setPrice] = useState<any>();
+
+  useEffect(() => {
+    const getSingleProductDetails = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/v1/getSingleProduct/${id}`,
+          {
+            withCredentials: true,
+          }
+        );
+        setProductInfo(res.data.product);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    };
+    getSingleProductDetails();
+  }, [id]);
+
+  const updateProductHandler = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/v1/updateProduct/${id}`,
+        {
+          name: name,
+          price: price,
+          desc: desc,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setProductInfo(res.data.product);
+      setName('');
+      setDesc('');
+      setPrice('');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Container>
       <ProductTitleContainer className='flex items-center justify-between'>
@@ -149,20 +208,17 @@ const Product = () => {
         </ProductTopLeft>
         <ProductTopRight>
           <ProductInfoTop>
-            <ProductInfoImage
-              src='https://images.pexels.com/photos/7156886/pexels-photo-7156886.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500'
-              alt=''
-            />
-            <ProductName className='text-xl '>Apple Airpods</ProductName>
+            <ProductInfoImage src={productInfo.img.secure_url} alt='' />
+            <ProductName className='text-xl '>{productInfo.name}</ProductName>
           </ProductInfoTop>
           <ProductInfoBottom>
             <ProductInfoItem>
               <ProductInfoKey>id:</ProductInfoKey>
-              <ProductInfoValue>123</ProductInfoValue>
+              <ProductInfoValue>{productInfo._id}</ProductInfoValue>
             </ProductInfoItem>
             <ProductInfoItem>
               <ProductInfoKey>sales:</ProductInfoKey>
-              <ProductInfoValue>5123</ProductInfoValue>
+              <ProductInfoValue>3</ProductInfoValue>
             </ProductInfoItem>
             <ProductInfoItem>
               <ProductInfoKey>active:</ProductInfoKey>
@@ -170,7 +226,7 @@ const Product = () => {
             </ProductInfoItem>
             <ProductInfoItem>
               <ProductInfoKey>in stock:</ProductInfoKey>
-              <ProductInfoValue>no</ProductInfoValue>
+              <ProductInfoValue>yes</ProductInfoValue>
             </ProductInfoItem>
           </ProductInfoBottom>
         </ProductTopRight>
@@ -179,27 +235,36 @@ const Product = () => {
         <ProductForm>
           <ProductFormLeft>
             <label>Product Name</label>
-            <input type='text' placeholder='Apple AirPod' />
-            <label>In Stock</label>
-            <select name='inStock' id='idStock'>
-              <option value='yes'>Yes</option>
-              <option value='no'>No</option>
-            </select>
-            <label>Active</label>
-            <select name='active' id='active'>
-              <option value='yes'>Yes</option>
-              <option value='no'>No</option>
-            </select>
+            <input
+              type='text'
+              placeholder={productInfo.name}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <label>Product Description</label>
+            <input
+              type='text'
+              placeholder={productInfo.desc}
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
+            />
+            <label>Product Price</label>
+            <input
+              type='number'
+              placeholder={productInfo.price}
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
           </ProductFormLeft>
           <ProductFormRight>
             <ProductUpload>
-              <ProductUploadImg src='https://images.pexels.com/photos/7156886/pexels-photo-7156886.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500' />
+              <ProductUploadImg src={productInfo.img.secure_url} />
               <label htmlFor='file'>
-                <Publish />
+                <Publish className='cursor-pointer' />
               </label>
               <input type='file' id='file' style={{ display: 'none' }} />
             </ProductUpload>
-            <ProductButton>Update</ProductButton>
+            <ProductButton onClick={updateProductHandler}>Update</ProductButton>
           </ProductFormRight>
         </ProductForm>
       </ProductBottom>

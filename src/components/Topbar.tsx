@@ -1,6 +1,7 @@
 /** @format */
 
 import { NotificationsNone, Language, Settings } from '@material-ui/icons';
+import Cookies from 'js-cookie';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -38,36 +39,46 @@ const Avatar = styled.img`
 `;
 
 const Topbar = () => {
+  const token = Cookies.get('token');
+  const authUserNavbar = (
+    <TopRight className='flex items-center justify-between'>
+      <IconContainer className='relative'>
+        <NotificationsNone style={{ fontSize: 30 }} />
+        <IconBadge className='absolute flex items-center justify-center text-s'>
+          2
+        </IconBadge>
+      </IconContainer>
+      <IconContainer className='relative'>
+        <Language style={{ fontSize: 30 }} />
+        <IconBadge className='absolute flex items-center justify-center text-s'>
+          2
+        </IconBadge>
+      </IconContainer>
+      <IconContainer className='relative'>
+        <Settings style={{ fontSize: 30 }} />
+      </IconContainer>
+      <Avatar
+        src='https://images.pexels.com/photos/1526814/pexels-photo-1526814.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500'
+        alt=''
+        className=''
+      />
+    </TopRight>
+  );
+  const tester = (
+    <div>
+      <span className='mr-5'>AdminEmail: 'test0@email.com'</span>
+      <span>AdminPassword: 'test0123'</span>
+    </div>
+  );
   return (
-    <Container className='w-full h-14 bg-white'>
-      <Wrapper className='h-full flex justify-between items-center'>
+    <Container className='w-full bg-white h-14'>
+      <Wrapper className='flex items-center justify-between h-full'>
         <TopLeft>
-          <Logo className='font-semibold text-4xl cursor-pointer text-blue-900'>
+          <Logo className='text-4xl font-semibold text-blue-900 cursor-pointer'>
             Nyka Admin.
           </Logo>
         </TopLeft>
-        <TopRight className='flex justify-between items-center'>
-          <IconContainer className='relative'>
-            <NotificationsNone style={{ fontSize: 30 }} />
-            <IconBadge className='absolute flex justify-center items-center text-s'>
-              2
-            </IconBadge>
-          </IconContainer>
-          <IconContainer className='relative'>
-            <Language style={{ fontSize: 30 }} />
-            <IconBadge className='absolute flex justify-center items-center text-s'>
-              2
-            </IconBadge>
-          </IconContainer>
-          <IconContainer className='relative'>
-            <Settings style={{ fontSize: 30 }} />
-          </IconContainer>
-          <Avatar
-            src='https://images.pexels.com/photos/1526814/pexels-photo-1526814.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500'
-            alt=''
-            className=''
-          />
-        </TopRight>
+        {token ? authUserNavbar : tester}
       </Wrapper>
     </Container>
   );

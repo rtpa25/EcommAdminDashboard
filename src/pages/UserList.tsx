@@ -2,26 +2,17 @@
 
 import { DeleteOutline } from '@material-ui/icons';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { userRows } from '../dummyData';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 const Container = styled.div`
   flex: 4;
 `;
-
-const User = styled.div`
+const ProductListItem = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const Image = styled.img`
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 0.625rem;
 `;
 
 const EditButton = styled.button`
@@ -48,26 +39,37 @@ const DeleteButton = styled(DeleteOutline)`
 `;
 
 const UserList = () => {
-  const [data, setData] = useState(userRows);
+  const [data, setData] = useState<any[]>([]);
 
-  const handleDelete = (id: number) => {
-    setData(data.filter((item) => item.id !== id));
-    console.log(data);
+  useEffect(() => {
+    const getAllUsers = async () => {
+      const res = await axios.get('http://localhost:5000/api/v1/getAllUsers', {
+        withCredentials: true,
+      });
+      setData(res.data.users);
+    };
+    getAllUsers();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    //Order of the two lines is important
+    await axios.delete(`http://localhost:5000/api/v1/deleteUser/${id}`, {
+      withCredentials: true,
+    });
+    setData(data.filter((item) => item?._id !== id));
   };
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90, type: 'number' },
-    { field: 'username', headerName: 'Username', width: 130, type: 'string' },
+    { field: '_id', headerName: 'ID', width: 180 },
     {
       field: 'user',
-      headerName: 'User',
+      headerName: 'user',
       width: 200,
       renderCell: (params) => {
         return (
-          <User>
-            <Image className='userListImg' src={params.row.avatar} alt='' />
+          <ProductListItem className='productListItem'>
             {params.row.username}
-          </User>
+          </ProductListItem>
         );
       },
     },
@@ -77,18 +79,7 @@ const UserList = () => {
       type: 'string',
       width: 200,
     },
-    {
-      field: 'status',
-      headerName: 'Status',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 120,
-    },
-    {
-      field: 'transaction',
-      headerName: 'Transaction',
-      width: 160,
-    },
+
     {
       field: 'action',
       headerName: 'Action',
@@ -96,12 +87,12 @@ const UserList = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={'/user/' + params.row.id}>
+            <Link to={'/user/' + params.row._id}>
               <EditButton className='userListEdit'>Edit</EditButton>
             </Link>
             <div
               onClick={() => {
-                handleDelete(params.row.id);
+                handleDelete(params.row._id);
               }}>
               <DeleteButton />
             </div>
@@ -114,6 +105,7 @@ const UserList = () => {
   return (
     <Container>
       <DataGrid
+        getRowId={(row) => row._id}
         rows={data}
         columns={columns}
         checkboxSelection

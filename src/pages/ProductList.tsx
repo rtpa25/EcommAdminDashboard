@@ -2,10 +2,10 @@
 
 import { DeleteOutline } from '@material-ui/icons';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { productRows } from '../dummyData';
 
 const Container = styled.div`
   flex: 4;
@@ -44,16 +44,32 @@ const ProductListDeleteButton = styled(DeleteOutline)`
   }
 `;
 
-const UserList = () => {
-  const [data, setData] = useState(productRows);
+const ProductList = () => {
+  const [data, setData] = useState<any[]>([]);
 
-  const handleDelete = (id: number) => {
-    setData(data.filter((item) => item.id !== id));
-    console.log(data);
+  useEffect(() => {
+    const getAllProducts = async () => {
+      const res = await axios.get(
+        'http://localhost:5000/api/v1/getAllProducts',
+        {
+          withCredentials: true,
+        }
+      );
+      setData(res.data.products);
+    };
+    getAllProducts();
+  }, []);
+
+  const handleDelete = async (id: number) => {
+    //Order of the two lines is important
+    await axios.delete(`http://localhost:5000/api/v1/deleteProduct/${id}`, {
+      withCredentials: true,
+    });
+    setData(data.filter((item) => item?._id !== id));
   };
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: '_id', headerName: 'ID', width: 90 },
     {
       field: 'product',
       headerName: 'Product',
@@ -63,7 +79,7 @@ const UserList = () => {
           <ProductListItem className='productListItem'>
             <ProductListImg
               className='productListImg'
-              src={params.row.img}
+              src={params.row.img.secure_url}
               alt=''
             />
             {params.row.name}
@@ -71,12 +87,7 @@ const UserList = () => {
         );
       },
     },
-    { field: 'stock', headerName: 'Stock', width: 200 },
-    {
-      field: 'status',
-      headerName: 'Status',
-      width: 120,
-    },
+
     {
       field: 'price',
       headerName: 'Price',
@@ -89,14 +100,14 @@ const UserList = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={'/product/' + params.row.id}>
+            <Link to={'/product/' + params.row._id}>
               <ProductListEditButton className='productListEdit'>
                 Edit
               </ProductListEditButton>
             </Link>
             <ProductListDeleteButton
               className='productListDelete'
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleDelete(params.row._id)}
             />
           </>
         );
@@ -107,6 +118,7 @@ const UserList = () => {
   return (
     <Container>
       <DataGrid
+        getRowId={(row) => row._id}
         rows={data}
         columns={columns}
         checkboxSelection
@@ -116,4 +128,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default ProductList;
