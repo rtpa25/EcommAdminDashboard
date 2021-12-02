@@ -1,6 +1,8 @@
 /** @format */
 
 import { Visibility } from '@material-ui/icons';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -22,12 +24,7 @@ const ListItem = styled.li`
   justify-content: space-between;
   margin: 1.25rem 0;
 `;
-const Image = styled.img`
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  object-fit: cover;
-`;
+
 const User = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,65 +53,39 @@ const Icon = styled(Visibility)`
 `;
 
 const WidgetSm = () => {
+  const [users, setUsers] = useState<any>([]);
+
+  useEffect(() => {
+    const getLatestUsers = async () => {
+      const res = await axios.get(
+        'http://localhost:5000/api/v1/getAllUsers?new=true',
+        {
+          withCredentials: true,
+        }
+      );
+      setUsers(res.data.users);
+    };
+    getLatestUsers();
+  }, [setUsers]);
+
   return (
     <Container>
-      <Title>New Users</Title>
+      <Title>New Users(from db)</Title>
       <List>
-        <ListItem>
-          <Image src='https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500' />
-          <User>
-            <UserName>Anna Keller</UserName>
-            <UserTitle>Software Developer</UserTitle>
-          </User>
-          <Button>
-            <Icon />
-            Display
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Image src='https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500' />
-          <User>
-            <UserName>Anna Keller</UserName>
-            <UserTitle>Software Developer</UserTitle>
-          </User>
-          <Button>
-            <Icon />
-            Display
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Image src='https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500' />
-          <User>
-            <UserName>Anna Keller</UserName>
-            <UserTitle>Software Developer</UserTitle>
-          </User>
-          <Button>
-            <Icon />
-            Display
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Image src='https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500' />
-          <User>
-            <UserName>Anna Keller</UserName>
-            <UserTitle>Software Developer</UserTitle>
-          </User>
-          <Button>
-            <Icon />
-            Display
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Image src='https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500' />
-          <User>
-            <UserName>Anna Keller</UserName>
-            <UserTitle>Software Developer</UserTitle>
-          </User>
-          <Button>
-            <Icon />
-            Display
-          </Button>
-        </ListItem>
+        {users.map((user: any) => {
+          return (
+            <ListItem key={user._id}>
+              <User>
+                <UserName>{user.name}</UserName>
+                <UserTitle>{user.email}</UserTitle>
+              </User>
+              <Button>
+                <Icon />
+                Display
+              </Button>
+            </ListItem>
+          );
+        })}
       </List>
     </Container>
   );
